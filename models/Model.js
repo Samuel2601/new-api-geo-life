@@ -67,7 +67,7 @@ var RolUserSchema = Schema({
 
 // Definición del esquema para el modelo de Estado_incidente
 var EstadoIncidenteSchema = Schema({
-    nombre: { type: String }
+    nombre: { type: String, unique:true}
 });
 
 // Definición del esquema para el modelo de Estado_actividad_proyecto

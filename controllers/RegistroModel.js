@@ -153,6 +153,13 @@ const registrarEncargadoCategoria = async function (req, res) {
 const registrarRolUsuario = async function (req, res) {
     if (req.user) {
         try {
+            // Verificar si ya existe un rol de usuario con el mismo orden
+            const rolExistente = await Model.Rol_user.findOne({ orden: req.body.orden });
+            if (rolExistente) {
+                return res.status(400).send({ message: 'Ya existe un rol de usuario con el mismo orden' });
+            }
+
+            // Crear el nuevo rol de usuario
             let nuevoRol = await Model.Rol_user.create(req.body);
             res.status(200).send({ message: 'Rol de usuario registrado correctamente', data: nuevoRol });
         } catch (error) {
@@ -162,6 +169,7 @@ const registrarRolUsuario = async function (req, res) {
         res.status(500).send({ message: 'Acceso no permitido' });
     }
 };
+
 
 const registrarPermiso = async function (req, res) {
     if (req.user) {
