@@ -5,7 +5,7 @@ const Controller = require('../controllers/ListarModel'); // Importar controlado
 
 // Rutas para listar elementos de diferentes modelos
 router.get('/listar_usuarios', auth.auth, Controller.listarUsuarios);
-router.get('/listar_actividades_proyecto', auth.auth, Controller.listarActividadesProyecto);
+router.get('/listar_ficha_sectorial', auth.auth, Controller.listarActividadesProyecto);
 router.get('/listar_incidentes_denuncias', auth.auth, Controller.listarIncidentesDenuncias);
 router.get('/listar_categorias', auth.auth, Controller.listarCategorias);
 router.get('/listar_subcategorias', auth.auth, Controller.listarSubcategorias);

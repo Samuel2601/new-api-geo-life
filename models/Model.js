@@ -15,11 +15,11 @@ var UsuarioSchema = Schema({
 });
 
 // Definición del esquema para el modelo de Ficha_sectorial
+//categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
 var FichaSectorialSchema = Schema({
-    //categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
     descripcion: { type: String, required: true },
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
-    direccion_geo: { type: Schema.Types.ObjectId, ref: 'direccion_geo' },
+    direccion_geo: { type: String,require:true },
     estado: { type: Schema.Types.ObjectId, ref: 'estado_actividad_proyecto' },
     actividad: [{ type: Schema.Types.ObjectId, ref: 'actividad_proyecto' }],
     fecha_evento: { type: Date },
@@ -28,10 +28,10 @@ var FichaSectorialSchema = Schema({
 
 // Definición del esquema para el modelo de Incidentes_denuncia
 var IncidentesDenunciaSchema = Schema({
-    categoria: { type: Schema.Types.ObjectId, ref: 'categoria' },
-    subcategoria: { type: Schema.Types.ObjectId, ref: 'subcategoria' },
-    direccion_geo: { type: Schema.Types.ObjectId, ref: 'direccion_geo' },
-    ciudadano: { type: Schema.Types.ObjectId, ref: 'usuario' },
+    categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
+    subcategoria: { type: Schema.Types.ObjectId, ref: 'subcategoria' , required: true},
+    direccion_geo: { type: String, require:true },
+    ciudadano: { type: Schema.Types.ObjectId, ref: 'usuario' , required: true },
     estado: { type: Schema.Types.ObjectId, ref: 'estado_incidente' },
     respuesta: { type: String },
     descripcion: { type: String, required: true },
@@ -55,7 +55,7 @@ var SubcategoriaSchema = Schema({
 
 // Definición del esquema para el modelo de Encargado_categoria
 var EncargadoCategoriaSchema = Schema({
-    encargado: { type: Schema.Types.ObjectId, ref: 'usuario' },
+    encargado: [{ type: Schema.Types.ObjectId, ref: 'usuario' }],
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria' }
 });
 
@@ -67,17 +67,19 @@ var RolUserSchema = Schema({
 
 // Definición del esquema para el modelo de Estado_incidente
 var EstadoIncidenteSchema = Schema({
-    nombre: { type: String, unique:true}
+    nombre: { type: String, unique:true},
+    orden:{type:Number,required:true}
 });
 
 // Definición del esquema para el modelo de Estado_actividad_proyecto
 var EstadoActividadProyectoSchema = Schema({
-    nombre: { type: String }
+    nombre: { type: String, unique:true },
+    orden:{type:Number,required:true}
 });
 
 // Definición del esquema para el modelo de Actividad_proyecto
 var ActividadProyectoSchema = Schema({
-    nombre: { type: String }
+    nombre: { type: String },
 });
 
 // Definición del esquema para el modelo de Direccion_geo

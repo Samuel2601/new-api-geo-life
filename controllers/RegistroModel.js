@@ -71,16 +71,18 @@ const registrarIncidenteDenuncia = async function (req, res) {
     if (req.user) {
         try {
             var data = req.body;
-            var img_path = req.files.portada.path;
-            var name = img_path.split('\\'); // usar / en producción
-            var portada_name = name[2];
-            data.foto = portada_name;
-            
+            var img_path = req.files.foto.path;
+            if(img_path){
+                var name = img_path.split('\\'); // usar / en producción
+                var portada_name = name[1];
+                data.foto = portada_name;
+            }
             // Crear un nuevo incidente denuncia con los datos proporcionados
             let nuevoIncidente = await Model.Incidentes_denuncia.create(data);
             
             res.status(200).send({ message: 'Incidente/denuncia registrado correctamente', data: nuevoIncidente });
         } catch (error) {
+            console.log(error);
             res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: error });
         }
     } else {
@@ -188,7 +190,12 @@ const registrarPermiso = async function (req, res) {
 const registrarEstadoIncidente = async function (req, res) {
     if (req.user) {
         try {
-            let nuevoEstado = await Model.Estado_incidente.create(req.body);
+            let data = req.body;
+            let verf= await Model.Estado_incidente.find();
+            if(verf.length==0){
+                data.orden=1;
+            }
+            let nuevoEstado = await Model.Estado_incidente.create(data);
             res.status(200).send({ message: 'Estado de incidente registrado correctamente', data: nuevoEstado });
         } catch (error) {
             res.status(500).send({ message: 'Error al registrar el estado de incidente', error: error });
@@ -202,7 +209,12 @@ const registrarEstadoIncidente = async function (req, res) {
 const registrarEstadoActividadProyecto = async function (req, res) {
     if (req.user) {
         try {
-            let nuevoEstado = await Model.Estado_actividad_proyecto.create(req.body);
+            let data = req.body;
+            let verf= await Model.Estado_actividad_proyecto.find();
+            if(!verf){
+                data.orden=1;
+            }
+            let nuevoEstado = await Model.Estado_actividad_proyecto.create(data);
             res.status(200).send({ message: 'Estado de actividad de proyecto registrado correctamente', data: nuevoEstado });
         } catch (error) {
             res.status(500).send({ message: 'Error al registrar el estado de actividad de proyecto', error: error });

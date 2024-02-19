@@ -7,7 +7,7 @@ const Model = require('../models/Model');
 const listarUsuarios = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -26,7 +26,7 @@ const listarUsuarios = async function (req, res) {
 const listarActividadesProyecto = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -45,12 +45,12 @@ const listarActividadesProyecto = async function (req, res) {
 const listarIncidentesDenuncias = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 });
+            var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano');
             res.status(200).send({ data: incidentesDenuncias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de incidentes/denuncias', error: error });
@@ -64,7 +64,7 @@ const listarIncidentesDenuncias = async function (req, res) {
 const listarCategorias = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -83,12 +83,13 @@ const listarCategorias = async function (req, res) {
 const listarSubcategorias = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var subcategorias = await Model.Subcategoria.find(filtroConsulta).sort({ createdAt: -1 });
+            var subcategorias = await Model.Subcategoria.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria');
+            console.log(filtroConsulta,subcategorias)
             res.status(200).send({ data: subcategorias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de subcategorías', error: error });
@@ -102,12 +103,12 @@ const listarSubcategorias = async function (req, res) {
 const listarEncargadosCategorias = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var encargadosCategorias = await Model.Encargado_categoria.find(filtroConsulta).sort({ createdAt: -1 });
+            var encargadosCategorias = await Model.Encargado_categoria.find(filtroConsulta).sort({ createdAt: -1 }).populate('usuario').populate('categoria');
             res.status(200).send({ data: encargadosCategorias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de encargados de categorías', error: error });
@@ -121,7 +122,7 @@ const listarEncargadosCategorias = async function (req, res) {
 const listarRolesUsuarios = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -139,7 +140,7 @@ const listarRolesUsuarios = async function (req, res) {
 const listarPermisos = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -158,7 +159,7 @@ const listarPermisos = async function (req, res) {
 const listarEstadosIncidentes = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -177,7 +178,7 @@ const listarEstadosIncidentes = async function (req, res) {
 const listarEstadosActividadesProyecto = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -196,7 +197,7 @@ const listarEstadosActividadesProyecto = async function (req, res) {
 const listarTiposActividadesProyecto = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
@@ -215,7 +216,7 @@ const listarTiposActividadesProyecto = async function (req, res) {
 const listarDireccionesGeo = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.body;
+            const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
