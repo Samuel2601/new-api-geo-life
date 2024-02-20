@@ -31,7 +31,11 @@ const listarActividadesProyecto = async function (req, res) {
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var actividadesProyecto = await Model.Ficha_sectorial.find(filtroConsulta).sort({ createdAt: -1 });
+            var actividadesProyecto = await Model.Ficha_sectorial.find(filtroConsulta)
+            .sort({ createdAt: -1 })
+            .populate('encargado')
+            .populate('estado')
+            .populate('actividad');
             res.status(200).send({ data: actividadesProyecto });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de actividades de proyecto', error: error });
