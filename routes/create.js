@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../middlewares/authenticate'); // Importar middleware de autenticación
 const Controller = require('../controllers/RegistroModel'); // Importar controlador
 var multiparty = require('connect-multiparty');
-var path = multiparty({uploadDir: './uploads'});
+var path = multiparty({uploadDir: './uploads/incidentes'});
 
 // Rutas para registrar elementos en diferentes modelos
 router.post('/registrar_usuario', auth.auth, Controller.registrarUsuario);

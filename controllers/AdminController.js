@@ -48,9 +48,9 @@ const forgotpassword = async function (req, res) {
 const obtener_portada = async function (req, res) {
 	var img = req.params['img'];
 
-	fs.stat('./uploads/' + img, function (err) {
+	fs.stat('./uploads/incidentes/' + img, function (err) {
 		if (!err) {
-			let path_img = './uploads/' + img;
+			let path_img = './uploads/incidentes/' + img;
 			res.status(200).sendFile(path.resolve(path_img));
 		} else {
 			let path_img = './uploads/default.jpg';

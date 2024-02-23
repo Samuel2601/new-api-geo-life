@@ -74,7 +74,7 @@ var EstadoIncidenteSchema = Schema({
 // Definición del esquema para el modelo de Estado_actividad_proyecto
 var EstadoActividadProyectoSchema = Schema({
     nombre: { type: String, unique:true },
-    orden:{type:Number,required:true}
+    orden:{type:Number,required:false}
 });
 
 // Definición del esquema para el modelo de Actividad_proyecto

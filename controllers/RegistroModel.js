@@ -70,17 +70,25 @@ const registrarActividadProyecto = async function (req, res) {
 const registrarIncidenteDenuncia = async function (req, res) {
     if (req.user) {
         try {
+            console.log("Body",req.body);
+            //console.log("foto",req.files);
+            //console.log("Path Foto",req.files.foto.path);
             var data = req.body;
-            var img_path = req.files.foto.path;
-            if(img_path){
-                var name = img_path.split('\\'); // usar / en producción
+            if(req.files.foto){
+                var img_path = req.files.foto.path;
+                var name = img_path.split('/'); // usar / en producción \\ local
                 var portada_name = name[1];
                 data.foto = portada_name;
             }
-            // Crear un nuevo incidente denuncia con los datos proporcionados
-            let nuevoIncidente = await Model.Incidentes_denuncia.create(data);
-            
-            res.status(200).send({ message: 'Incidente/denuncia registrado correctamente', data: nuevoIncidente });
+            let estado = await Model.Estado_incidente.findOne().sort({ orden: 1 });
+            if(estado){
+                data.estado=estado._id;
+                // Crear un nuevo incidente denuncia con los datos proporcionados
+                let nuevoIncidente = await Model.Incidentes_denuncia.create(data);                
+                res.status(200).send({ message: 'Incidente/denuncia registrado correctamente', data: nuevoIncidente });
+            }else{
+                res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: 'No se han registrados Estado de Incidencia' });
+            }
         } catch (error) {
             console.log(error);
             res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: error });

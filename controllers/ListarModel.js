@@ -54,7 +54,7 @@ const listarIncidentesDenuncias = async function (req, res) {
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano');
+            var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano').populate('estado');
             res.status(200).send({ data: incidentesDenuncias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de incidentes/denuncias', error: error });
