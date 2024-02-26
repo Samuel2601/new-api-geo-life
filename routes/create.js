@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
       cb(null, file.originalname); // Nombre original del archivo
     }
   });
-const upload = multer({ storage: storage });
+const upload = multer({ uploadDir: storage });
 
 router.post('/registrar_incidente_app', [auth.auth,upload.single('foto')],Controller.registrarIncidenteDenuncia);
 
