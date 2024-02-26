@@ -75,6 +75,8 @@ const registrarIncidenteDenuncia = async function (req, res) {
             //console.log("Path Foto",req.files.foto.path);
             var data = req.body;
             if(req.files.foto){
+                console.log("foto",req.files);
+                console.log("Path Foto",req.files.foto.path);
                 var img_path = req.files.foto.path;
                 var name = img_path.split('/'); // usar / en producción \\ local
                 var portada_name = name[1];

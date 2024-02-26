@@ -4,6 +4,20 @@ const auth = require('../middlewares/authenticate'); // Importar middleware de a
 const Controller = require('../controllers/RegistroModel'); // Importar controlador
 var multiparty = require('connect-multiparty');
 var path = multiparty({uploadDir: './uploads/incidentes'});
+const multer = require('multer');
+
+// Configuración de multer para guardar archivos en una carpeta local
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/incidentes'); // Carpeta donde se guardarán los archivos
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname); // Nombre original del archivo
+    }
+  });
+const upload = multer({ storage: storage });
+
+router.post('/registrar_incidente_app', [auth.auth,upload.single('foto')],Controller.registrarIncidenteDenuncia);
 
 // Rutas para registrar elementos en diferentes modelos
 router.post('/registrar_usuario', auth.auth, Controller.registrarUsuario);
@@ -19,3 +33,5 @@ router.post('/registrar_tipo_actividad_proyecto', auth.auth, Controller.registra
 router.post('/registrar_direccion_geo', auth.auth, Controller.registrarDireccionGeo);
 router.post('/registrar_permisos', auth.auth, Controller.registrarPermiso);
 module.exports = router;
+
+
