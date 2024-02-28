@@ -16,12 +16,9 @@ var list_routes = require('./routes/list');
 var update_routes = require('./routes/update');
 
 
-mongoose.connect('mongodb://localhost:27017/mi_basededatos');
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Error de conexión:'));
-db.once('connected', function() {
-  console.log('Conectado a MongoDB');
-});
+mongoose.connect('mongodb://127.0.0.1:27017/buzon')
+  .then(() => console.log('Connected!'));
+
 //console.log("Corriendo....");
 server.listen(port, function(){
     console.log("Servidor " + port );
@@ -37,10 +34,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/buzon',{useUnifiedTopology: true, us
     }
 });*/
 
-/* Multiparty se hace cargo
+ /*Multiparty se hace cargo*/
 app.use(bodyparser.urlencoded({limit: '200mb',extended:true}));
 app.use(bodyparser.json({limit: '200mb', extended: true}));
-*/
+
+
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin','*'); 
     res.header('Access-Control-Allow-Headers','Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Access-Control-Allow-Request-Method');

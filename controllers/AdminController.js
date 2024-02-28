@@ -182,6 +182,7 @@ const login_admin = async function (req, res) {
 				res.status(404).json({message: 'No Registrado'});
 			}
 	} catch (error) {
+		console.log(error);
 		res.status(500).send({ message: 'ERROR Server'});
 	}
 };

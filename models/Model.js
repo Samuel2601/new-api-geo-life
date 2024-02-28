@@ -1,10 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // Definición del esquema para el modelo de Usuario
-var UsuarioSchema = Schema({
+const UsuarioSchema = new Schema({
     cedula: { type: String, required: true, unique: true },
     nombres: { type: String, required: true },
     telefono: { type: String, required: true },
@@ -16,7 +16,7 @@ var UsuarioSchema = Schema({
 
 // Definición del esquema para el modelo de Ficha_sectorial
 //categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
-var FichaSectorialSchema = Schema({
+const FichaSectorialSchema = new Schema({
     descripcion: { type: String, required: true },
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
     direccion_geo: { type: String,require:true },
@@ -27,7 +27,7 @@ var FichaSectorialSchema = Schema({
 });
 
 // Definición del esquema para el modelo de Incidentes_denuncia
-var IncidentesDenunciaSchema = Schema({
+const IncidentesDenunciaSchema = new Schema({
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
     subcategoria: { type: Schema.Types.ObjectId, ref: 'subcategoria' , required: true},
     direccion_geo: { type: String, require:true },
@@ -40,56 +40,56 @@ var IncidentesDenunciaSchema = Schema({
 });
 
 // Definición del esquema para el modelo de Categoria
-var CategoriaSchema = Schema({
+const CategoriaSchema = new Schema({
     nombre: { type: String, required: true },
     descripcion: { type: String, required: true }
 });
 
 
 // Definición del esquema para el modelo de Subcategoria
-var SubcategoriaSchema = Schema({
+const SubcategoriaSchema = new Schema({
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria',require:true },
     nombre: { type: String ,require:true},
     descripcion: { type: String ,require:true}
 });
 
 // Definición del esquema para el modelo de Encargado_categoria
-var EncargadoCategoriaSchema = Schema({
+const EncargadoCategoriaSchema = new Schema({
     encargado: [{ type: Schema.Types.ObjectId, ref: 'usuario' }],
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria' }
 });
 
 // Definición del esquema para el modelo de Rol_user
-var RolUserSchema = Schema({
+const RolUserSchema = new Schema({
     nombre: { type: String },
     orden: { type: Number,unique: true}
 });
 
 // Definición del esquema para el modelo de Estado_incidente
-var EstadoIncidenteSchema = Schema({
+const EstadoIncidenteSchema = new Schema({
     nombre: { type: String, unique:true},
     orden:{type:Number,required:true}
 });
 
 // Definición del esquema para el modelo de Estado_actividad_proyecto
-var EstadoActividadProyectoSchema = Schema({
+const EstadoActividadProyectoSchema = new Schema({
     nombre: { type: String, unique:true },
     orden:{type:Number,required:false}
 });
 
 // Definición del esquema para el modelo de Actividad_proyecto
-var ActividadProyectoSchema = Schema({
+const ActividadProyectoSchema = new Schema({
     nombre: { type: String },
 });
 
 // Definición del esquema para el modelo de Direccion_geo
-var DireccionGeoSchema = Schema({
+const DireccionGeoSchema = new Schema({
     nombre: { type: String },
     latitud: { type: Number },
     longitud: { type: Number }
 });
 
-var permisosSchema = new Schema({
+const permisosSchema = new Schema({
     nombreComponente: {
         type: String,
         required: true
@@ -110,7 +110,7 @@ var permisosSchema = new Schema({
 
 // Exportar los esquemas
 module.exports = {
-    Permiso:mongoose.model('Permisos', permisosSchema),
+    Permiso: mongoose.model('Permisos', permisosSchema),
     Usuario: mongoose.model('usuario', UsuarioSchema),
     Ficha_sectorial: mongoose.model('ficha_sectorial', FichaSectorialSchema),
     Incidentes_denuncia: mongoose.model('incidentes_denuncia', IncidentesDenunciaSchema),
