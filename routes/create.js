@@ -3,26 +3,14 @@ const router = express.Router();
 const auth = require('../middlewares/authenticate'); // Importar middleware de autenticación
 const Controller = require('../controllers/RegistroModel'); // Importar controlador
 var multiparty = require('connect-multiparty');
-var path = multiparty({uploadDir: './uploads/incidentes'});
-const multer = require('multer');
-
-// Configuración de multer para guardar archivos en una carpeta local
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/incidentes'); // Carpeta donde se guardarán los archivos
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname); // Nombre original del archivo
-    }
-  });
-const upload = multer({ uploadDir: storage });
-
-router.post('/registrar_incidente_app', [auth.auth,upload.single('foto')],Controller.registrarIncidenteDenuncia);
+var path = new multiparty({
+  uploadDir: './uploads/',
+  maxFieldsSize: 50 * 1024 * 1024});
 
 // Rutas para registrar elementos en diferentes modelos
+router.post('/registrar_incidente_denuncia',[auth.auth,path], Controller.registrarIncidenteDenuncia);
 router.post('/registrar_usuario', auth.auth, Controller.registrarUsuario);
 router.post('/registrar_actividad_proyecto', auth.auth, Controller.registrarActividadProyecto);
-router.post('/registrar_incidente_denuncia',[auth.auth,path], Controller.registrarIncidenteDenuncia);
 router.post('/registrar_categoria', auth.auth, Controller.registrarCategoria);
 router.post('/registrar_subcategoria', auth.auth, Controller.registrarSubcategoria);
 router.post('/registrar_encargado_categoria', auth.auth, Controller.registrarEncargadoCategoria);
@@ -32,6 +20,21 @@ router.post('/registrar_estado_actividad_proyecto', auth.auth, Controller.regist
 router.post('/registrar_tipo_actividad_proyecto', auth.auth, Controller.registrarTipoActividadProyecto);
 router.post('/registrar_direccion_geo', auth.auth, Controller.registrarDireccionGeo);
 router.post('/registrar_permisos', auth.auth, Controller.registrarPermiso);
+
+/*const multer = require('multer');
+
+// Configuración de multer para guardar archivos en una carpeta local
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Carpeta donde se guardarán los archivos
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname); // Nombre original del archivo
+    }
+  });
+const upload = multer({ storage: storage });
+
+router.post('/registrar_incidente_app', [auth.auth,path],Controller.registrarIncidenteDenuncia);
+*/
+
 module.exports = router;
-
-

@@ -36,7 +36,7 @@ var IncidentesDenunciaSchema = Schema({
     respuesta: { type: String },
     descripcion: { type: String, required: true },
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario' },
-    foto: { type: String }
+    foto: [{ type: String }]
 });
 
 // Definición del esquema para el modelo de Categoria

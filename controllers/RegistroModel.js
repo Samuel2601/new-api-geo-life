@@ -70,26 +70,28 @@ const registrarActividadProyecto = async function (req, res) {
 const registrarIncidenteDenuncia = async function (req, res) {
     if (req.user) {
         try {
-            console.log("Body",req.body);
-            //console.log("foto",req.files);
-            //console.log("Path Foto",req.files.foto.path);
-            var data = req.body;
-            if(req.files.foto){
-                console.log("foto",req.files);
-                console.log("Path Foto",req.files.foto.path);
-                var img_path = req.files.foto.path;
-                var name = img_path.split('/'); // usar / en producciÃ³n \\ local
+            console.log("Body", req.body);
+            var fotos = [];
+            var index = 0;
+            while (req.files['foto' + index]) {
+                var file = req.files['foto' + index];
+                var img_path = file.path;
+                var name = img_path.split('/'); // usar / en producción \\ local
                 var portada_name = name[1];
-                data.foto = portada_name;
+                fotos.push(portada_name);
+                console.log("Foto", portada_name);
+                index++;
+            }
+            if (fotos.length > 0) {
+                req.body.foto = fotos;
             }
             let estado = await Model.Estado_incidente.findOne().sort({ orden: 1 });
-            if(estado){
-                data.estado=estado._id;
-                // Crear un nuevo incidente denuncia con los datos proporcionados
-                let nuevoIncidente = await Model.Incidentes_denuncia.create(data);                
+            if (estado) {
+                req.body.estado = estado._id;
+                let nuevoIncidente = await Model.Incidentes_denuncia.create(req.body);
                 res.status(200).send({ message: 'Incidente/denuncia registrado correctamente', data: nuevoIncidente });
-            }else{
-                res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: 'No se han registrados Estado de Incidencia' });
+            } else {
+                res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: 'No se han registrado Estado de Incidencia' });
             }
         } catch (error) {
             console.log(error);
