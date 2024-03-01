@@ -4,13 +4,16 @@ const auth = require('../middlewares/authenticate'); // Importar middleware de a
 const Controller = require('../controllers/RegistroModel'); // Importar controlador
 var multiparty = require('connect-multiparty');
 var path = new multiparty({
-  uploadDir: './uploads/',
+  uploadDir: './uploads/incidentes/',
+  maxFieldsSize: 50 * 1024 * 1024});
+var pathficha = new multiparty({
+  uploadDir: './uploads/fichas/',
   maxFieldsSize: 50 * 1024 * 1024});
 
 // Rutas para registrar elementos en diferentes modelos
 router.post('/registrar_incidente_denuncia',[auth.auth,path], Controller.registrarIncidenteDenuncia);
 router.post('/registrar_usuario', auth.auth, Controller.registrarUsuario);
-router.post('/registrar_actividad_proyecto', auth.auth, Controller.registrarActividadProyecto);
+router.post('/registrar_actividad_proyecto', [auth.auth,pathficha], Controller.registrarActividadProyecto);
 router.post('/registrar_categoria', auth.auth, Controller.registrarCategoria);
 router.post('/registrar_subcategoria', auth.auth, Controller.registrarSubcategoria);
 router.post('/registrar_encargado_categoria', auth.auth, Controller.registrarEncargadoCategoria);

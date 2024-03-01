@@ -11,6 +11,7 @@ const UsuarioSchema = new Schema({
     rol_user: { type: Schema.Types.ObjectId, ref: 'rol_user', required: true },
     correo: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    foto: { type: String },
     estado: { type: String, default: 'On' }
 });
 
@@ -23,7 +24,8 @@ const FichaSectorialSchema = new Schema({
     estado: { type: Schema.Types.ObjectId, ref: 'estado_actividad_proyecto' },
     actividad: [{ type: Schema.Types.ObjectId, ref: 'actividad_proyecto' }],
     fecha_evento: { type: Date },
-    observacion: { type: String }
+    observacion: { type: String },
+    foto: { type: String },
 });
 
 // Definición del esquema para el modelo de Incidentes_denuncia
@@ -86,7 +88,8 @@ const ActividadProyectoSchema = new Schema({
 const DireccionGeoSchema = new Schema({
     nombre: { type: String },
     latitud: { type: Number },
-    longitud: { type: Number }
+    longitud: { type: Number },
+    foto: { type: String },
 });
 
 const permisosSchema = new Schema({

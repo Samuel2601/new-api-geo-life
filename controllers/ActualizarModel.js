@@ -6,8 +6,16 @@ const Model = require('../models/Model');
 const actualizarUsuario = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
+        let data = req.body;
+        if(req.files.foto){
+            var file = req.files.foto;
+            var img_path = file.path;
+            var name = img_path.split('/'); // usar / en producci�n \\ local
+            var portada_name = name[2];
+            data.foto=portada_name;
+        }
         try {
-            let usuarioActualizado = await Model.Usuario.findByIdAndUpdate(id, req.body, { new: true });
+            let usuarioActualizado = await Model.Usuario.findByIdAndUpdate(id, data, { new: true });
             res.status(200).send({ message: 'Usuario actualizado correctamente', data: usuarioActualizado });
         } catch (error) {
             res.status(500).send({ message: 'Error al actualizar el usuario', error: error });

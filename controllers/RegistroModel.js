@@ -76,8 +76,8 @@ const registrarIncidenteDenuncia = async function (req, res) {
             while (req.files['foto' + index]) {
                 var file = req.files['foto' + index];
                 var img_path = file.path;
-                var name = img_path.split('/'); // usar / en producción \\ local
-                var portada_name = name[1];
+                var name = img_path.split('/'); // usar / en producciï¿½n \\ local
+                var portada_name = name[2];
                 fotos.push(portada_name);
                 console.log("Foto", portada_name);
                 index++;

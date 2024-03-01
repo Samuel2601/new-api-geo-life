@@ -48,9 +48,35 @@ const forgotpassword = async function (req, res) {
 const obtener_portada = async function (req, res) {
 	var img = req.params['img'];
 
-	fs.stat('./uploads/' + img, function (err) {
+	fs.stat('./uploads/incidentes/' + img, function (err) {
 		if (!err) {
-			let path_img = './uploads/' + img;
+			let path_img = './uploads/incidentes/' + img;
+			res.status(200).sendFile(path.resolve(path_img));
+		} else {
+			let path_img = './uploads/default.jpg';
+			res.status(200).sendFile(path.resolve(path_img));
+		}
+	});
+};
+const obtener_portada_avatar = async function (req, res) {
+	var img = req.params['img'];
+
+	fs.stat('./uploads/avatar/' + img, function (err) {
+		if (!err) {
+			let path_img = './uploads/avatar/' + img;
+			res.status(200).sendFile(path.resolve(path_img));
+		} else {
+			let path_img = './uploads/default.jpg';
+			res.status(200).sendFile(path.resolve(path_img));
+		}
+	});
+};
+const obtener_portada_ficha = async function (req, res) {
+	var img = req.params['img'];
+
+	fs.stat('./uploads/fichas/' + img, function (err) {
+		if (!err) {
+			let path_img = './uploads/fichas/' + img;
 			res.status(200).sendFile(path.resolve(path_img));
 		} else {
 			let path_img = './uploads/default.jpg';
@@ -186,7 +212,6 @@ const login_admin = async function (req, res) {
 		res.status(500).send({ message: 'ERROR Server'});
 	}
 };
-
 
 const listar_registro = async function (req, res) {
 	if (req.user) {
@@ -365,4 +390,6 @@ module.exports = {
 	login_admin,
 	listar_registro,
 	verificar_token,	
+	obtener_portada_avatar,
+	obtener_portada_ficha,
 };
