@@ -56,7 +56,16 @@ const registrarUsuario = async function (req, res) {
 const registrarActividadProyecto = async function (req, res) {
     if (req.user) {
         try {
-            let nuevaActividad = await Model.Ficha_sectorial.create(req.body);
+            let data = req.body;
+            console.log(req.files);
+            if(req.files.foto){
+                var file = req.files.foto;
+                var img_path = file.path;
+                var name = img_path.split('\\'); // usar / en producci�n \\ local
+                var portada_name = name[2];
+                data.foto=portada_name;
+            }
+            let nuevaActividad = await Model.Ficha_sectorial.create(data);
             res.status(200).send({ message: 'Actividad de proyecto registrada correctamente', data: nuevaActividad });
         } catch (error) {
             res.status(500).send({ message: 'Error al registrar la actividad de proyecto', error: error });

@@ -7,6 +7,7 @@ const actualizarUsuario = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         let data = req.body;
+        console.log(req.files);
         if(req.files.foto){
             var file = req.files.foto;
             var img_path = file.path;
