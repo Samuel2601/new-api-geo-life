@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 const Model = require('../models/Model');
-
+var fs = require('fs');
 // Función para registrar un nuevo usuario
 const registrarUsuario = async function (req, res) {
     if (req.user) {
@@ -61,7 +61,7 @@ const registrarActividadProyecto = async function (req, res) {
             if(req.files.foto){
                 var file = req.files.foto;
                 var img_path = file.path;
-                var name = img_path.split('\\'); // usar / en producci�n \\ local
+                var name = img_path.split('/'); // usar / en producci�n \\ local
                 var portada_name = name[2];
                 data.foto=portada_name;
             }
@@ -262,14 +262,46 @@ const registrarTipoActividadProyecto = async function (req, res) {
 // Función para registrar una nueva dirección geográfica
 const registrarDireccionGeo = async function (req, res) {
     if (req.user) {
+        let data = req.body;
+        console.log(data, req.files);
+        if(req.files.foto){
+            var file = req.files.foto;
+            var img_path = file.path;
+
+            /*
+            var name = img_path.split('/'); // usar / en producción \\ local
+            var portada_name = name[2];
+            */
+            // Obtener la extensión del archivo
+            var ext = file.originalFilename.split('.').pop();
+            // Generar un nuevo nombre único para el archivo
+            var newFileName = data.nombre + '.' + ext;
+            // Ruta donde se guardará el archivo con el nuevo nombre
+            var newPath = './uploads/barrios/' + newFileName;
+            // Eliminar cualquier imagen con el mismo nombre que data.nombre
+            fs.readdirSync('./uploads/barrios/').forEach(file => {
+                if (file.startsWith(data.nombre)) {
+                    fs.unlinkSync('./uploads/barrios/' + file);
+                }
+            });
+            // Renombrar el archivo
+            fs.renameSync(img_path, newPath);
+            
+            // Guardar el nuevo nombre en los datos
+            data.foto = newFileName;
+            res.status(200).send({ message: 'Guardado', data: data.nombre });
+        }else{
+            res.status(400).send({ message: 'No se ha enviando una imagen' });
+        }
+        /*
         try {
             let nuevaDireccion = await Model.Direccion_geo.create(req.body);
             res.status(200).send({ message: 'Dirección geográfica registrada correctamente', data: nuevaDireccion });
         } catch (error) {
             res.status(500).send({ message: 'Error al registrar la dirección geográfica', error: error });
-        }
+        }*/
     } else {
-        res.status(500).send({ message: 'Acceso no permitido' });
+        res.status(401).send({ message: 'Acceso no permitido' });
     }
 };
 

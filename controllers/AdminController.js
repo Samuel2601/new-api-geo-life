@@ -84,6 +84,29 @@ const obtener_portada_ficha = async function (req, res) {
 		}
 	});
 };
+const obtener_portada_barrio = async function (req, res) {
+    var img = req.params['img'];
+    
+    // Obtener la lista de archivos en el directorio
+    fs.readdir('./uploads/barrios/', (err, files) => {
+        if (err) {
+            console.error(err);
+            let path_img = './uploads/default.jpg';
+            return res.status(200).sendFile(path.resolve(path_img));
+        }
+        
+        // Buscar la primera imagen que coincida con el nombre
+        let matchingFile = files.find(file => file.startsWith(img));
+        if (matchingFile) {
+            let path_img = './uploads/barrios/' + matchingFile;
+            return res.status(200).sendFile(path.resolve(path_img));
+        } else {
+            let path_img = './uploads/barrios/default.jpg';
+            return res.status(200).sendFile(path.resolve(path_img));
+        }
+    });
+};
+
 const enviar_password = async function (link, userdata) {
 	try {
 		var readHTMLFile = function (path, callback) {
@@ -392,4 +415,5 @@ module.exports = {
 	verificar_token,	
 	obtener_portada_avatar,
 	obtener_portada_ficha,
+	obtener_portada_barrio
 };

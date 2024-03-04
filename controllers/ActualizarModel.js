@@ -1,13 +1,13 @@
 var mongoose = require('mongoose');
 
 const Model = require('../models/Model');
-
+var bcrypt = require('bcrypt-nodejs');
 // Función para actualizar un usuario por su ID
 const actualizarUsuario = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         let data = req.body;
-        console.log(req.files);
+        console.log(id,data,req.files);
         if(req.files.foto){
             var file = req.files.foto;
             var img_path = file.path;
@@ -16,9 +16,22 @@ const actualizarUsuario = async function (req, res) {
             data.foto=portada_name;
         }
         try {
-            let usuarioActualizado = await Model.Usuario.findByIdAndUpdate(id, data, { new: true });
-            res.status(200).send({ message: 'Usuario actualizado correctamente', data: usuarioActualizado });
+            if(data.password){
+                bcrypt.hash(data.password, null, null, async function (err, hash) {
+                    if (hash) {
+                        data.password=hash;
+                        let usuarioActualizado = await Model.Usuario.findByIdAndUpdate(id, data, { new: true });
+                        res.status(200).send({ message: 'Usuario actualizado correctamente', data: usuarioActualizado });
+                    }
+                });
+            }else{
+                delete data.password;
+                let usuarioActualizado = await Model.Usuario.findByIdAndUpdate(id, data, { new: true });
+                res.status(200).send({ message: 'Usuario actualizado correctamente', data: usuarioActualizado });
+            }
+            
         } catch (error) {
+            console.log(error);
             res.status(500).send({ message: 'Error al actualizar el usuario', error: error });
         }
     } else {
