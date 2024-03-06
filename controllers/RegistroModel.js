@@ -58,12 +58,19 @@ const registrarActividadProyecto = async function (req, res) {
         try {
             let data = req.body;
             console.log(req.files);
-            if(req.files.foto){
-                var file = req.files.foto;
+            var fotos = [];
+            var index = 0;
+            while (req.files['foto' + index]) {
+                var file = req.files['foto' + index];
                 var img_path = file.path;
                 var name = img_path.split('/'); // usar / en producci�n \\ local
                 var portada_name = name[2];
-                data.foto=portada_name;
+                fotos.push(portada_name);
+                console.log("Foto", portada_name);
+                index++;
+            }
+            if (fotos.length > 0) {
+                data.foto = fotos;
             }
             let nuevaActividad = await Model.Ficha_sectorial.create(data);
             res.status(200).send({ message: 'Actividad de proyecto registrada correctamente', data: nuevaActividad });

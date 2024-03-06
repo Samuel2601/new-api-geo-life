@@ -25,7 +25,7 @@ const FichaSectorialSchema = new Schema({
     actividad: [{ type: Schema.Types.ObjectId, ref: 'actividad_proyecto' }],
     fecha_evento: { type: Date },
     observacion: { type: String },
-    foto: { type: String },
+    foto: [{ type: String }],
 });
 
 // Definición del esquema para el modelo de Incidentes_denuncia
