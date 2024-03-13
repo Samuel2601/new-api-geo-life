@@ -15,6 +15,12 @@ const UsuarioSchema = new Schema({
     estado: { type: String, default: 'On' }
 });
 
+// Definición del esquema para el modelo de Rol_user
+const RolUserSchema = new Schema({
+    nombre: { type: String },
+    orden: { type: Number,unique: true}
+});
+
 // Definición del esquema para el modelo de Ficha_sectorial
 //categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
 const FichaSectorialSchema = new Schema({
@@ -32,13 +38,19 @@ const FichaSectorialSchema = new Schema({
 const IncidentesDenunciaSchema = new Schema({
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria', required: true },
     subcategoria: { type: Schema.Types.ObjectId, ref: 'subcategoria' , required: true},
-    direccion_geo: { type: String, require:true },
+    direccion_geo: {
+        nombre: { type: String, required: true },
+        latitud: { type: Number, required: true },
+        longitud: { type: Number, required: true }
+    },
     ciudadano: { type: Schema.Types.ObjectId, ref: 'usuario' , required: true },
     estado: { type: Schema.Types.ObjectId, ref: 'estado_incidente' },
-    respuesta: { type: String },
+    foto: [{ type: String }],
     descripcion: { type: String, required: true },
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario' },
-    foto: [{ type: String }]
+    respuesta: { type: String },
+    evidencia:[{ type: String }],
+    
 });
 
 // Definición del esquema para el modelo de Categoria
@@ -61,11 +73,6 @@ const EncargadoCategoriaSchema = new Schema({
     categoria: { type: Schema.Types.ObjectId, ref: 'categoria' }
 });
 
-// Definición del esquema para el modelo de Rol_user
-const RolUserSchema = new Schema({
-    nombre: { type: String },
-    orden: { type: Number,unique: true}
-});
 
 // Definición del esquema para el modelo de Estado_incidente
 const EstadoIncidenteSchema = new Schema({
@@ -89,7 +96,6 @@ const DireccionGeoSchema = new Schema({
     nombre: { type: String },
     latitud: { type: Number },
     longitud: { type: Number },
-    foto: { type: String },
 });
 
 const permisosSchema = new Schema({
@@ -98,16 +104,9 @@ const permisosSchema = new Schema({
         required: true
     },
     rolesPermitidos: [{
-        rol: {
-            type: Schema.Types.ObjectId,
-            ref: 'rol_user',
-            required: true
-        },
-        permisos: {
-            type: [String],
-            enum: ['crear', 'editar', 'eliminar', 'ver'],
-            default: []
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'rol_user',
+        required: true
     }]
 });
 

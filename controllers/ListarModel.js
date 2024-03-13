@@ -10,9 +10,22 @@ const listarUsuarios = async function (req, res) {
             const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
-                filtroConsulta[campo] = valor;
+                const [modelo, campoRelacionado] = campo.split('.');
+                if (modelo == 'rol_user' && campoRelacionado) {
+                    let filteruser={};
+                    filteruser[campoRelacionado]=valor;
+                    const rolUser = await Model.Rol_user.findOne(filteruser);
+                    if (rolUser) {
+                        filtroConsulta['rol_user'] = rolUser._id;
+                    }else{
+                        res.status(401).send({ message: 'Error al obtener el rol de usuario'});
+                    }
+                }else{
+                    filtroConsulta[campo] = valor;
+                }
             }
-            var usuarios = await Model.Usuario.find(filtroConsulta).sort({ createdAt: -1 });
+            var usuarios = await Model.Usuario.find(filtroConsulta).sort({ createdAt: -1 }).populate('rol_user');
+            console.log(filtroConsulta,campo,valor,usuarios);
             res.status(200).send({ data: usuarios });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de usuarios', error: error });
@@ -112,7 +125,7 @@ const listarEncargadosCategorias = async function (req, res) {
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var encargadosCategorias = await Model.Encargado_categoria.find(filtroConsulta).sort({ createdAt: -1 }).populate('usuario').populate('categoria');
+            var encargadosCategorias = await Model.Encargado_categoria.find(filtroConsulta).sort({ createdAt: -1 }).populate('encargado').populate('categoria');
             res.status(200).send({ data: encargadosCategorias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de encargados de categorías', error: error });
@@ -131,7 +144,7 @@ const listarRolesUsuarios = async function (req, res) {
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var rolesUsuarios = await Model.Rol_user.find(filtroConsulta).sort({ createdAt: -1 });
+            var rolesUsuarios = await Model.Rol_user.find(filtroConsulta).sort({ orden: 1 });
             res.status(200).send({ data: rolesUsuarios });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de roles de usuarios', error: error });
@@ -144,12 +157,73 @@ const listarRolesUsuarios = async function (req, res) {
 const listarPermisos = async function (req, res) {
     if (req.user) {
         try {
+            const   componentes = [
+                'CreateCategoriaComponent',
+                'IndexCategoriaComponent',
+                'EditCategoriaComponent',
+                'CreateSubcategoriaComponent',
+                'IndexSubcategoriaComponent',
+                'EditSubcategoriaComponent',
+                'ErrorComponent',
+                'IndexUsuarioComponent',
+                'EditUsuarioComponent',
+                'CreateUsuarioComponent',
+                'CreateFichaSectorialComponent',
+                'IndexFichaSectorialComponent',
+                'EditFichaSectorialComponent',
+                'IndexIncidentesDenunciaComponent',
+                'CreateIncidentesDenunciaComponent',
+                'EditIncidentesDenunciaComponent',
+                'IndexEncargadoCategoriaComponent',
+                'CreateEncargadoCategoriaComponent',
+                'EditEncargadoCategoriaComponent',
+                'IndexRolUserComponent',
+                'EditRolUserComponent',
+                'CreateRolUserComponent',
+                'IndexEstadoIncidenteComponent',
+                'EditEstadoIncidenteComponent',
+                'CreateEstadoIncidenteComponent',
+                'IndexEstadoActividadProyectoComponent',
+                'EditEstadoActividadProyectoComponent',
+                'CreateEstadoActividadProyectoComponent',
+                'IndexActividadProyectoComponent',
+                'EditActividadProyectoComponent',
+                'CreateActividadProyectoComponent',
+                'IndexDireccionGeoComponent',
+                'EditDireccionGeoComponent',
+                'CreateDireccionGeoComponent',
+                'IndexPermisosComponent',
+                'EditPermisosComponent',
+                'CreatePermisosComponent',
+                'AdminComponent',
+                  ];
+            // Suponiendo que 'componentes' es un array con todas las componentes que recibes y 'rolPermitidoId' es el ID del rol permitido
+            componentes.forEach(async componente => {
+                try {
+                    const nuevoPermiso = new Model.Permiso({
+                        nombreComponente: componente,
+                        rolesPermitidos: ['65d89dac488c56a8dc0114ce','65c3e6710644fb2174bc6369']
+                    });
+                    const verf=await Model.Permiso.find({nombreComponente:componente});
+                    console.log(verf);
+                    if(verf.length==0){
+                        await Model.Permiso.create(nuevoPermiso);                        
+                        console.log(`Permiso creado para ${componente}`);
+                    }else{                        
+                        console.log(`Ya creado para ${componente}`);
+                    }
+                    
+                } catch (error) {
+                    console.error(`Error al crear permiso para ${componente}: ${error.message}`);
+                }
+            });
+
             const { campo, valor } = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var permisos = await Model.Permiso.find(filtroConsulta).sort({ createdAt: -1 });
+            var permisos = await Model.Permiso.find(filtroConsulta).sort({ createdAt: -1 }).populate('rolesPermitidos');
             res.status(200).send({ data: permisos });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de permisos', error: error });

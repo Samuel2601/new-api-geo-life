@@ -104,6 +104,7 @@ const registrarIncidenteDenuncia = async function (req, res) {
             let estado = await Model.Estado_incidente.findOne().sort({ orden: 1 });
             if (estado) {
                 req.body.estado = estado._id;
+                req.body.direccion_geo=JSON.parse(req.body.direccion_geo);
                 let nuevoIncidente = await Model.Incidentes_denuncia.create(req.body);
                 res.status(200).send({ message: 'Incidente/denuncia registrado correctamente', data: nuevoIncidente });
             } else {

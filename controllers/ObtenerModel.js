@@ -166,6 +166,65 @@ const obtenerDireccionGeo = async function (req, res) {
         res.status(500).send({ message: 'Acceso no permitido' });
     }
 };
+// Función para obtener una dirección geográfica por su ID
+const verificarPermiso = async function (req, res) {
+    if (req.user) {
+        try {
+            // Obtener los parámetros desde la solicitud
+            const { componente, rol_usuario } = req.body;
+
+            const permisoComponente =await Model.Permiso.findOne({ nombreComponente: componente});
+            if(permisoComponente){
+                // Verificar si el usuario tiene permiso para acceder al recurso
+                const permiso=permisoComponente .rolesPermitidos.includes(rol_usuario);
+
+                if (permiso) {
+                    // Si el permiso existe, enviarlo en la respuesta
+                    res.status(200).send({ data: permisoComponente  });
+                } else {
+                    // Si el permiso no existe, enviar un mensaje de error
+                    res.status(404).send({ message: 'Permiso no encontrado' });
+                }
+            }else{
+                // Si el permiso existe, enviarlo en la respuesta
+                res.status(200).send({ data: permisoComponente });
+            }
+            
+        } catch (error) {
+            // Si ocurre un error al buscar el permiso, enviar un mensaje de error
+            res.status(500).send({ message: 'Error al obtener la dirección geográfica', error: error });
+        }
+    } else {
+        // Si el usuario no está autenticado, enviar un mensaje de acceso no permitido
+        res.status(401).send({ message: 'Acceso no permitido' });
+    }
+};
+
+// Función para listar direcciones geográficas con opción de búsqueda por filtros
+const obtenerPermisosRol = async function (req, res) {
+    if (req.user) {
+        try {
+            // Obtener los parámetros desde la solicitud
+            const rol_usuario = req.params['id'];
+
+            const permisoComponente =await Model.Permiso.find({ rolesPermitidos: rol_usuario});
+            console.log(permisoComponente);
+            const permisos = {};
+            permisoComponente.forEach((item) => {
+            permisos[item.nombreComponente] = true;
+            });
+            res.status(200).send({ data: permisos  });
+            
+        } catch (error) {
+            console.log(error);
+            // Si ocurre un error al buscar el permiso, enviar un mensaje de error
+            res.status(500).send({ message: 'Error al obtener la dirección geográfica', error: error });
+        }
+    } else {
+        // Si el usuario no está autenticado, enviar un mensaje de acceso no permitido
+        res.status(401).send({ message: 'Acceso no permitido' });
+    }
+};
 
 module.exports = {
     obtenerUsuario,
@@ -178,5 +237,7 @@ module.exports = {
     obtenerEstadoIncidente,
     obtenerEstadoActividadProyecto,
     obtenerTipoActividadProyecto,
-    obtenerDireccionGeo
+    obtenerDireccionGeo,
+    verificarPermiso,
+    obtenerPermisosRol
 };

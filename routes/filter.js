@@ -15,5 +15,7 @@ router.get('/obtener_estado_incidente/:id', auth.auth, Controller.obtenerEstadoI
 router.get('/obtener_estado_actividad_proyecto/:id', auth.auth, Controller.obtenerEstadoActividadProyecto);
 router.get('/obtener_tipo_actividad_proyecto/:id', auth.auth, Controller.obtenerTipoActividadProyecto);
 router.get('/obtener_direccion_geo/:id', auth.auth, Controller.obtenerDireccionGeo);
+router.post('/verificar_permiso', auth.auth, Controller.verificarPermiso);
+router.get('/obtener_permisosrol/:id', auth.auth, Controller.obtenerPermisosRol);
 
 module.exports = router;
