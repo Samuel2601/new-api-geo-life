@@ -4,7 +4,7 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 var secret = 'Municipio2024';
 
-exports.createToken = function(user){
+exports.createToken = function(user,time,tipo){
     var payload = {
         sub: user._id,
         nombres: user.nombres,
@@ -12,7 +12,7 @@ exports.createToken = function(user){
         correo: user.correo,
         rol_user:user.rol_user,
         iat: moment().unix(),
-        exp: moment().add(3,'hours').unix()
+        exp: moment().add(time||3,tipo||'hours').unix()
     }
 
     return jwt.encode(payload,secret);

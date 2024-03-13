@@ -207,6 +207,7 @@ const login_admin = async function (req, res) {
 		});
 	}
 	try {
+		console.log(data);
 		const admin_arr = await Model.Usuario.find({ correo: data.correo }).populate('rol_user');
 			if (admin_arr.length != 0) {
 				let user = admin_arr[0];
@@ -215,7 +216,7 @@ const login_admin = async function (req, res) {
 						if (check) {          
 							res.status(200).send({
 								data: user,
-								token: jwt.createToken(user),
+								token: jwt.createToken(user,data.time||null,data.tipo||null),
 							});
 										
 						} else {
