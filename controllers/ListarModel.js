@@ -62,12 +62,17 @@ const listarActividadesProyecto = async function (req, res) {
 const listarIncidentesDenuncias = async function (req, res) {
     if (req.user) {
         try {
-            const { campo, valor } = req.query;
+            const { campo, valor , all} = req.query;
             let filtroConsulta = {};
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano').populate('estado');
+            console.log(all);
+            if(!all){
+                var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano').populate('estado');
+            }else{                
+                var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 });
+            }
             res.status(200).send({ data: incidentesDenuncias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de incidentes/denuncias', error: error });

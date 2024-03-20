@@ -18,11 +18,9 @@ const registrarUsuario = async function (req, res) {
                     data.rol_user = rol_arr[0]._id;
                 }
             }
-            
-            var admin_arr = await Model.Usuario.find({ correo: data.correo });
-            var admin_arr2 = await Model.Usuario.find({ cedula: data.cedula });
+            var admin = await Model.Usuario.findOne({ $or: [{ correo: data.correo }, { cedula: data.cedula }] });
 
-            if (admin_arr.length == 0 && admin_arr2.length == 0) {
+            if(!admin){
                 try {
                     bcrypt.hash(data.password, null, null, async function (err, hash) {
                         if (hash) {
@@ -39,9 +37,10 @@ const registrarUsuario = async function (req, res) {
                     console.log(error);
                     res.status(500).send({ message: 'Algo salió mal' });
                 }
-            } else {
+            }else{
                 res.status(409).send({ message: 'El correo y/o la cédula ya existe en la base de datos' });
             }
+
         } catch (error) {
             console.log(error);
             res.status(500).send({ message: 'Algo salió mal' });
@@ -57,16 +56,14 @@ const registrarActividadProyecto = async function (req, res) {
     if (req.user) {
         try {
             let data = req.body;
-            console.log(req.files);
             var fotos = [];
             var index = 0;
             while (req.files['foto' + index]) {
                 var file = req.files['foto' + index];
                 var img_path = file.path;
-                var name = img_path.split('/'); // usar / en producci�n \\ local
+                var name = img_path.split('\\'); // usar / en producci�n \\ local
                 var portada_name = name[2];
                 fotos.push(portada_name);
-                console.log("Foto", portada_name);
                 index++;
             }
             if (fotos.length > 0) {
@@ -92,10 +89,9 @@ const registrarIncidenteDenuncia = async function (req, res) {
             while (req.files['foto' + index]) {
                 var file = req.files['foto' + index];
                 var img_path = file.path;
-                var name = img_path.split('/'); // usar / en producci�n \\ local
+                var name = img_path.split('\\'); // usar / en producci�n \\ local
                 var portada_name = name[2];
                 fotos.push(portada_name);
-                console.log("Foto", portada_name);
                 index++;
             }
             if (fotos.length > 0) {
