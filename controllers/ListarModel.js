@@ -25,7 +25,6 @@ const listarUsuarios = async function (req, res) {
                 }
             }
             var usuarios = await Model.Usuario.find(filtroConsulta).sort({ createdAt: -1 }).populate('rol_user');
-            console.log(filtroConsulta,campo,valor,usuarios);
             res.status(200).send({ data: usuarios });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de usuarios', error: error });
@@ -67,8 +66,7 @@ const listarIncidentesDenuncias = async function (req, res) {
             if (campo && valor) {
                 filtroConsulta[campo] = valor;
             }
-            console.log(all);
-            if(!all){
+            if(all){
                 var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria').populate('subcategoria').populate('ciudadano').populate('estado');
             }else{                
                 var incidentesDenuncias = await Model.Incidentes_denuncia.find(filtroConsulta).sort({ createdAt: -1 });
@@ -111,7 +109,6 @@ const listarSubcategorias = async function (req, res) {
                 filtroConsulta[campo] = valor;
             }
             var subcategorias = await Model.Subcategoria.find(filtroConsulta).sort({ createdAt: -1 }).populate('categoria');
-            console.log(filtroConsulta,subcategorias)
             res.status(200).send({ data: subcategorias });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la lista de subcategorías', error: error });
@@ -210,7 +207,6 @@ const listarPermisos = async function (req, res) {
                         rolesPermitidos: ['65d89dac488c56a8dc0114ce','65c3e6710644fb2174bc6369']
                     });
                     const verf=await Model.Permiso.find({nombreComponente:componente});
-                    console.log(verf);
                     if(verf.length==0){
                         await Model.Permiso.create(nuevoPermiso);                        
                         console.log(`Permiso creado para ${componente}`);

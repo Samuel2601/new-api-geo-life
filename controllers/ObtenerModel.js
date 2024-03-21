@@ -208,7 +208,6 @@ const obtenerPermisosRol = async function (req, res) {
             const rol_usuario = req.params['id'];
 
             const permisoComponente =await Model.Permiso.find({ rolesPermitidos: rol_usuario});
-            console.log(permisoComponente);
             const permisos = {};
             permisoComponente.forEach((item) => {
             permisos[item.nombreComponente] = true;
@@ -216,7 +215,7 @@ const obtenerPermisosRol = async function (req, res) {
             res.status(200).send({ data: permisos  });
             
         } catch (error) {
-            console.log(error);
+            console.error(error);
             // Si ocurre un error al buscar el permiso, enviar un mensaje de error
             res.status(500).send({ message: 'Error al obtener la dirección geográfica', error: error });
         }

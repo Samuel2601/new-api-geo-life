@@ -7,7 +7,7 @@ const actualizarUsuario = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         let data = req.body;
-        console.log(id,data,req.files);
+        //console.log(id,data,req.files);
         if(req.files.foto){
             var file = req.files.foto;
             var img_path = file.path;
@@ -31,7 +31,7 @@ const actualizarUsuario = async function (req, res) {
             }
             
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).send({ message: 'Error al actualizar el usuario', error: error });
         }
     } else {

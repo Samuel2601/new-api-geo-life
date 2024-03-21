@@ -14,7 +14,7 @@ const registrarUsuario = async function (req, res) {
                     let rol_arrc = await Model.Rol_user.create({nombre:'Ciudadano', orden: 4});
                     data.rol_user = rol_arrc._id;
                 }else{
-                    console.log(rol_arr);
+                    //console.log(rol_arr);
                     data.rol_user = rol_arr[0]._id;
                 }
             }
@@ -26,7 +26,7 @@ const registrarUsuario = async function (req, res) {
                         if (hash) {
                             data.password = hash;
                             data.estado = 'On';
-                            console.log(data);
+                            //console.log(data);
                             await Model.Usuario.create(data);
                             res.status(201).send({ message: 'Registrado con éxito' });
                         } else {
@@ -34,7 +34,7 @@ const registrarUsuario = async function (req, res) {
                         }
                     });
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                     res.status(500).send({ message: 'Algo salió mal' });
                 }
             }else{
@@ -42,7 +42,7 @@ const registrarUsuario = async function (req, res) {
             }
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).send({ message: 'Algo salió mal' });
         }
     } else {
@@ -61,7 +61,7 @@ const registrarActividadProyecto = async function (req, res) {
             while (req.files['foto' + index]) {
                 var file = req.files['foto' + index];
                 var img_path = file.path;
-                var name = img_path.split('\\'); // usar / en producci�n \\ local
+                var name = img_path.split('/'); // usar / en producci�n \\ local
                 var portada_name = name[2];
                 fotos.push(portada_name);
                 index++;
@@ -83,13 +83,13 @@ const registrarActividadProyecto = async function (req, res) {
 const registrarIncidenteDenuncia = async function (req, res) {
     if (req.user) {
         try {
-            console.log("Body", req.body);
+            //console.log("Body", req.body);
             var fotos = [];
             var index = 0;
             while (req.files['foto' + index]) {
                 var file = req.files['foto' + index];
                 var img_path = file.path;
-                var name = img_path.split('\\'); // usar / en producci�n \\ local
+                var name = img_path.split('/'); // usar / en producci�n \\ local
                 var portada_name = name[2];
                 fotos.push(portada_name);
                 index++;
@@ -107,7 +107,7 @@ const registrarIncidenteDenuncia = async function (req, res) {
                 res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: 'No se han registrado Estado de Incidencia' });
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).send({ message: 'Error al registrar el incidente/denuncia', error: error });
         }
     } else {
@@ -267,7 +267,6 @@ const registrarTipoActividadProyecto = async function (req, res) {
 const registrarDireccionGeo = async function (req, res) {
     if (req.user) {
         let data = req.body;
-        console.log(data, req.files);
         if(req.files.foto){
             var file = req.files.foto;
             var img_path = file.path;
