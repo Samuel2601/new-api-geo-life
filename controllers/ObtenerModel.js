@@ -67,7 +67,7 @@ const obtenerSubcategoria = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         try {
-            let subcategoria = await Model.Subcategoria.findById({ _id: id });
+            let subcategoria = await Model.Subcategoria.findById({ _id: id }).populate('categoria');
             res.status(200).send({ data: subcategoria });
         } catch (error) {
             res.status(500).send({ message: 'Error al obtener la subcategoría', error: error });

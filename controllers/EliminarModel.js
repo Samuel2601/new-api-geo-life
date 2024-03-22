@@ -46,13 +46,48 @@ const eliminarIncidenteDenuncia = async function (req, res) {
         res.status(500).send({ message: 'Acceso no permitido' });
     }
 };
+const verificarCategoria = async function (req, res) {
+    if (req.user) {
+        var id = req.params['id'];
+        try {
+            const cantidadSubcategorias = await Model.Subcategoria.countDocuments({ categoria: id });            
+            const cantidadIncidentes = await Model.Incidentes_denuncia.countDocuments({ categoria: id });
+
+            res.status(200).send({
+                cantidadSubcategorias: cantidadSubcategorias,
+                cantidadIncidentes: cantidadIncidentes
+            });
+        } catch (error) {
+            res.status(500).send({ message: 'Error al verificar la categoría', error: error });
+        }
+    } else {
+        res.status(500).send({ message: 'Acceso no permitido' });
+    }
+};
 
 // Función para eliminar una categoría por su ID
 const eliminarCategoria = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         try {
+            // Verificar si se debe eliminar subcategorías e incidentes
+            const { eliminarSubcategorias, nuevaCategoria } = req.body;
+            
+            if (eliminarSubcategorias) {
+                // Eliminar subcategorías
+                await Model.Subcategoria.deleteMany({ categoria: id });
+                
+                // Eliminar incidentes
+                await Model.Incidentes_denuncia.deleteMany({ categoria: id });
+            } else if (nuevaCategoria) {
+                // Vincular subcategorías e incidentes a la nueva categoría
+                await Model.Subcategoria.updateMany({ categoria: id }, { categoria: nuevaCategoria });
+                await Model.Incidentes_denuncia.updateMany({ categoria: id }, { categoria: nuevaCategoria });
+            }
+            
+            // Eliminar la categoría
             await Model.Categoria.findByIdAndDelete(id);
+            
             res.status(200).send({ message: 'Categoría eliminada correctamente' });
         } catch (error) {
             res.status(500).send({ message: 'Error al eliminar la categoría', error: error });
@@ -62,15 +97,45 @@ const eliminarCategoria = async function (req, res) {
     }
 };
 
+
 // Función para eliminar una subcategoría por su ID
 const eliminarSubcategoria = async function (req, res) {
     if (req.user) {
         var id = req.params['id'];
         try {
+            // Verificar si se debe eliminar subcategorías e incidentes
+            const { eliminarSubcategorias, nuevaCategoria } = req.body;
+            if (eliminarSubcategorias) {                
+                // Eliminar incidentes
+                await Model.Incidentes_denuncia.deleteMany({ categoria: id });
+            } else if (nuevaCategoria) {
+                // Vincular subcategorías e incidentes a la nueva categoría
+                await Model.Incidentes_denuncia.updateMany({ categoria: id }, { categoria: nuevaCategoria });
+            }
+
             await Model.Subcategoria.findByIdAndDelete(id);
             res.status(200).send({ message: 'Subcategoría eliminada correctamente' });
         } catch (error) {
             res.status(500).send({ message: 'Error al eliminar la subcategoría', error: error });
+        }
+    } else {
+        res.status(500).send({ message: 'Acceso no permitido' });
+    }
+};
+
+const verificarSubCategoria = async function (req, res) {
+    if (req.user) {
+        var id = req.params['id'];
+        try {
+
+            const cantidadIncidentes = await Model.Incidentes_denuncia.countDocuments({ subcategoria: id });
+
+            res.status(200).send({
+                cantidadIncidentes: cantidadIncidentes
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ message: 'Error al verificar la categoría', error: error });
         }
     } else {
         res.status(500).send({ message: 'Acceso no permitido' });
@@ -193,5 +258,7 @@ module.exports = {
     eliminarEstadoActividadProyecto,
     eliminarTipoActividadProyecto,
     eliminarDireccionGeo,
-    eliminarPermiso
+    eliminarPermiso,
+    verificarCategoria,
+    verificarSubCategoria
 };
