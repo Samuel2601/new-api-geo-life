@@ -12,13 +12,15 @@ const UsuarioSchema = new Schema({
     correo: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     foto: { type: String },
-    estado: { type: String, default: 'On' }
+    estado: { type: String, default: 'On' },
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 // Definición del esquema para el modelo de Rol_user
 const RolUserSchema = new Schema({
     nombre: { type: String },
-    orden: { type: Number,unique: true}
+    orden: { type: Number,unique: true},
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 // Definición del esquema para el modelo de Ficha_sectorial
@@ -28,10 +30,11 @@ const FichaSectorialSchema = new Schema({
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario', required: true },
     direccion_geo: { type: String,require:true },
     estado: { type: Schema.Types.ObjectId, ref: 'estado_actividad_proyecto' },
-    actividad: [{ type: Schema.Types.ObjectId, ref: 'actividad_proyecto' }],
+    actividad: { type: Schema.Types.ObjectId, ref: 'actividad_proyecto' },
     fecha_evento: { type: Date },
     observacion: { type: String },
     foto: [{ type: String }],
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 // Definición del esquema para el modelo de Incidentes_denuncia
@@ -50,7 +53,7 @@ const IncidentesDenunciaSchema = new Schema({
     encargado: { type: Schema.Types.ObjectId, ref: 'usuario' },
     respuesta: { type: String },
     evidencia:[{ type: String }],
-    
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 // Definición del esquema para el modelo de Categoria
@@ -70,7 +73,8 @@ const SubcategoriaSchema = new Schema({
 // Definición del esquema para el modelo de Encargado_categoria
 const EncargadoCategoriaSchema = new Schema({
     encargado: [{ type: Schema.Types.ObjectId, ref: 'usuario' }],
-    categoria: { type: Schema.Types.ObjectId, ref: 'categoria' }
+    categoria: { type: Schema.Types.ObjectId, ref: 'categoria' },
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 
@@ -89,6 +93,7 @@ const EstadoActividadProyectoSchema = new Schema({
 // Definición del esquema para el modelo de Actividad_proyecto
 const ActividadProyectoSchema = new Schema({
     nombre: { type: String },
+    createdAt: {type:Date, default: Date.now, require: true}
 });
 
 // Definición del esquema para el modelo de Direccion_geo
@@ -107,7 +112,7 @@ const permisosSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'rol_user',
         required: true
-    }]
+    }],
 });
 
 // Exportar los esquemas
